@@ -64,4 +64,39 @@ You may add some macros to tweak the behaviour of ParmPars.
 
 ## Usage
 
-TODO
+### Parameters format
+
+All the parameters should have form `<name>=<value>`. The last parameters may be a seed and contain only alphanumerical cha
+
+### Basic things
+
+* `parser.init(int argc, char *argv[])`: must be called at startup. Initializes the parser.  
+* `initGenerator(int argc, char *argv[], int randomGeneratorVersion)`: Testlib required, runs both `registerGen` and `parser.init`.  
+* `DECLARE(type, name, a...)`: declare a variable of type `type` and name `name` (which value is read from the parameters). Additional validation arguments can be supplied (see below). If the variable not found, exit with error.
+* `DECLARE_D(type, name, def, a...)`: same as previous, but if the variable not found, use the default value.
+
+### Parameter types
+
+The following types are supported:
+
+* Any integers
+* `float`, `double`, `long double`
+* `bool`, `char`
+* `std::string`
+
+### Validation
+
+* For any integer and floating point types (including `bool` and `char`), range validation can be used. It can be used like this:  
+```cpp
+DECLARE(int, n, range(1, 100));
+```  
+If `n` is outside of range `[1; 100]`, the generator will throw the error.
+
+* For string regex-based validation can be used. It looks in the following way:  
+```cpp
+DECLARE(string, s, "[a-z]{1,100}");
+```
+
+Validation also applies to `DECLARE_D`.
+
+TODO: Finish writing ReadMe!
