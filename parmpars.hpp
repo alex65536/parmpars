@@ -509,7 +509,11 @@ namespace TestLibAddon {
 	public:
 		T generate() const {
 			checkLoaded();
-			return rnd.next(left_, right_);
+			if (left_ == right_) {
+				return left_;
+			} else {
+				return rnd.next(left_, right_);
+			}
 		}
 		
 		T left() const {
