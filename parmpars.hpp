@@ -31,8 +31,7 @@
 //   PARMPARS_EXIT_ON_WARNING
 //   PARMPARS_USE_REGEX
 
-// TODO : force using GenRange exactly once! (?)
-// TODO : allow reading each variable using only one type! (?)
+// TODO : cache parsed variable values (?)
 // TODO : add constants support! The format is @const; or @const
 // TODO : add inline (?)
 // TODO : color errors/warnings (?)
