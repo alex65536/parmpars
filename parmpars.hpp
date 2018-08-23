@@ -34,7 +34,6 @@
 // TODO : force using GenRange exactly once! (?)
 // TODO : allow reading each variable using only one type! (?)
 // TODO : add constants support! The format is @const; or @const
-// TODO : add getAndGenerate
 // TODO : add inline (?)
 // TODO : color errors/warnings (?)
 
