@@ -36,7 +36,7 @@ The generator can be invoked using, e.g., the following line: `./gen n=10 m=3`. 
 
 * Support for adding constants and variable substitution (planned, but not implemented)
 
-* Independence from Testlib (though using ParmPars together with Testlib adds features like generatrive parameters)
+* Independence from Testlib (though using ParmPars together with Testlib adds features like generative parameters)
 
 ## Disadvantages
 
@@ -86,17 +86,70 @@ The following types are supported:
 
 ### Validation
 
-* For any integer and floating point types (including `bool` and `char`), range validation can be used. It can be used like this:  
-```cpp
-DECLARE(int, n, range(1, 100));
-```  
-If `n` is outside of range `[1; 100]`, the generator will throw the error.
+* For any integer and floating point types (including `bool` and `char`), range validation can be used. It can be used like this:
 
-* For string regex-based validation can be used. It looks in the following way:  
-```cpp
-DECLARE(string, s, "[a-z]{1,100}");
-```
+  ```cpp
+  DECLARE(int, n, range(1, 100));
+  ```
+  
+  If `n` is outside of range `[1; 100]`, the generator will throw the error.
+
+* For string regex-based validation can be used. It looks in the following way:
+
+  ```cpp
+  DECLARE(string, s, "[a-z]{1,100}");
+  ```
 
 Validation also applies to `DECLARE_D`.
 
-TODO: Finish writing ReadMe!
+### Conditional compilation macros
+
+You can use the macros to control the features of ParmPars. The following macros can be used:
+
+* `PARMPARS_EXIT_ON_WARNING`: treats warnings as errors and exit the generator on each warning.
+* `PARMPARS_USE_REGEX`: use `std::regex` to process regex validation. Disabled by default as not all compilers may support it. Also using STL regex increases compilation time.
+  If `PARMPARS_USE_REGEX` is not defined, Testlib's regex implementation is used (if it was included)
+
+### Generative parameters
+
+This works only with Testlib. Currently, there are two classes for this:
+
+* `GenRange<T>`: generates a number from the specified range.
+* `GenRegex`: generates a string using regex.
+
+How this works? Suppose you need to tell the generator that `n` must be from `1` to `10`, but want to give the ability for the generator to choose the exact value. You can write this:
+
+```cpp
+int main(int argc, char *argv[]) {
+  initGenerator(argc, argv, 1);
+  DECLARE_GEN(GenRange<int>, n);
+  ...
+```
+
+Now run this generator as `./gen 'n=[1; 10]'`. It will read `[1; 10]` as `GenRange<int>` and use it to generate a number from `1` to `10`, and then declare `int n` with this value.
+
+You can also use a longer way:
+
+```cpp
+...
+DECLARE(GenRange<int>, n);
+int nGen = n.generate();
+...
+```
+So, `DECLARE_GEN` is a shortcut to read `GenRange<T>` from the parameters and generate a value using one macro.
+
+`DECLARE_GEN_D` does the same thing as `DECLARE_GEN`, but you can specify the default `GenRange<T>` which can be used for generating if the variable was not found.
+
+`GenRange<T>` also supports range validation, it will validate not the generated value, but the range read from the input.
+
+## Need more examples
+
+See `test.cpp`.
+
+## Why not integrating with Testlib tightly?
+
+Testlib is heavy enough, you may choose not to use it for your generator, but still use ParmPars. Also, you can use alternative libraries for generators, like [jngen](https://github.com/ifsmirnov/jngen), and use ParmPars with it.
+
+## License
+
+ParmPars is distributed under MIT license, like Testlib.
