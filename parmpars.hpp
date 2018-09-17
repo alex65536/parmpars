@@ -57,9 +57,9 @@ const long double eps = 1e-12;
 
 namespace Alerts {
 	enum class Severity {
-		ERROR,
-		WARNING,
-		NOTE
+		Error,
+		Warning,
+		Note
 	};
 	
 	const char *names[] = {
@@ -71,9 +71,9 @@ namespace Alerts {
 	bool hadError = false;
 	
 	void processAlert(Severity severity) {
-		bool mustExit = severity == Severity::ERROR;
+		bool mustExit = severity == Severity::Error;
 		#ifdef PARMPARS_EXIT_ON_WARNING
-			mustExit |= severity == Severity::WARNING;
+			mustExit |= severity == Severity::Warning;
 		#endif
 		if (mustExit) {
 			hadError = true;
@@ -91,15 +91,15 @@ namespace Alerts {
 	}
 	
 	void error(const std::string &text) {
-		raiseAlert(Severity::ERROR, text);
+		raiseAlert(Severity::Error, text);
 	}
 	
 	void warning(const std::string &text) {
-		raiseAlert(Severity::WARNING, text);
+		raiseAlert(Severity::Warning, text);
 	}
 	
 	void note(const std::string &text) {
-		raiseAlert(Severity::NOTE, text);
+		raiseAlert(Severity::Note, text);
 	}
 }
 
