@@ -25,7 +25,7 @@
 #ifndef __PARM_PARS_HPP_INCLUDED__
 #define __PARM_PARS_HPP_INCLUDED__
 
-#define PARM_PARS_VERSION "0.3.0~alpha"
+#define PARM_PARS_VERSION "0.3.1~alpha"
 
 // defines:
 //   PARMPARS_EXIT_ON_WARNING
