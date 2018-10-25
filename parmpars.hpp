@@ -527,6 +527,10 @@ namespace TestLibAddon {
 		
 		GenRange() {}
 		
+		GenRange(const T &value)
+			: loaded_(true), left_(value), right_(value) {
+		}
+		
 		GenRange(const T &left, const T &right)
 			: loaded_(true), left_(left), right_(right) {
 		}
@@ -535,6 +539,16 @@ namespace TestLibAddon {
 	template<typename T>
 	std::ostream &operator<<(std::ostream &os, const GenRange<T> &value) {
 		return os << "[" << value.left() << "; " << value.right() << "]";
+	}
+	
+	template<typename T>
+	GenRange<T> genRange(const T &left, const T& right) {
+		return GenRange<T>(left, right);
+	}
+	
+	template<typename T>
+	GenRange<T> genRange(const T &left) {
+		return GenRange<T>(left, left);
 	}
 }
 
@@ -644,6 +658,7 @@ using ParmParsInternal::params;
 
 #ifdef USE_TESTLIB
 	using ParmParsInternal::TestLibAddon::GenRange;
+	using ParmParsInternal::TestLibAddon::genRange;
 	using ParmParsInternal::TestLibAddon::GenRegex;
 	using ParmParsInternal::TestLibAddon::initGenerator;
 #endif
