@@ -602,7 +602,7 @@ namespace TestLibAddon {
 		
 		void checkLoaded() const {
 			if (!loaded_) {
-				Alerts::error("TestLibAddon is not loaded!");
+				Alerts::error("GenRegex is not loaded!");
 			}
 		}
 	public:
