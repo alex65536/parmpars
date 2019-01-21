@@ -142,7 +142,7 @@ So, `DECLARE_GEN` is a shortcut to read `GenRange<T>` from the parameters and ge
 
 `GenRange<T>` also supports range validation, it will validate not the generated value, but the range read from the input.
 
-## Constant substitution
+### Constant substitution
 
 Tired of using something like `n=1000000` in all of your tests? Then, constant substitution if for you. ParmPars has a simple preprocessor. To define a constant, you can use something like
 
