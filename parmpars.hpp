@@ -25,14 +25,13 @@
 #ifndef __PARM_PARS_HPP_INCLUDED__
 #define __PARM_PARS_HPP_INCLUDED__
 
-#define PARM_PARS_VERSION "0.3.1~alpha"
+#define PARM_PARS_VERSION "0.4.0~alpha"
 
 // defines:
 //   PARMPARS_EXIT_ON_WARNING
 //   PARMPARS_USE_REGEX
 
 // TODO : cache parsed variable values (?)
-// TODO : add constants support! The format is @const; or @const
 // TODO : add inline (?)
 // TODO : color errors/warnings (?)
 
@@ -306,6 +305,55 @@ namespace Variables {
 }
 
 
+namespace Preprocessor {
+
+class Preprocessor {
+private:
+	std::map<std::string, std::string> variables_;
+public:
+	void define(const std::string &name, const std::string &value) {
+		if (!Variables::isValidName(name)) {
+			Alerts::error(StringBuilder()
+				<< "Macro \"" << name << "\" has invalid name"
+			);
+		}
+		variables_[name] = value;
+	}
+	
+	std::string preprocess(const std::string &line) const {
+		size_t len = line.size();
+		std::string res = "";
+		for (size_t i = 0; i < len;) {
+			if (line[i] != '@') {
+				res += line[i];
+				++i;
+				continue;
+			}
+			++i;
+			size_t p = i;
+			while (i < len && Variables::isValidMiddleChar(line[i])) {
+				++i;
+			}
+			std::string varName = line.substr(p, i-p);
+			if (i < len && line[i] == '!') {
+				++i;
+			}
+			if (variables_.find(varName) == end(variables_)) {
+				Alerts::error(StringBuilder() << "Macro \"" << varName << "\" not found");
+			}
+			res += variables_.at(varName);
+		}
+		return res;
+	}
+	
+	Preprocessor() {
+		variables_[""] = "@";
+	}
+};
+
+}
+
+
 namespace ValidateUtils {
 	bool isRandomSeed(const std::string &str) {
 		for (char c: str) {
@@ -368,6 +416,7 @@ private:
 	
 	bool loaded_ = false;
 	std::map<std::string, VariableValue> variables_;
+	Preprocessor::Preprocessor preprocessor_;
 	
 	void checkLoaded() {
 		if (!loaded_) {
@@ -380,10 +429,11 @@ private:
 		if (variables_.find(varName) != end(variables_)) {
 			std::string typeName = TypeInfo<T>::getTypeName();
 			VariableValue &varValue = variables_[varName];
-			if (!ReadFromString<T>::doIt(res, varValue.value)) {
+			std::string preprocessedValue = preprocessor_.preprocess(varValue.value);
+			if (!ReadFromString<T>::doIt(res, preprocessedValue)) {
 				Alerts::error(StringBuilder()
 					<< "Could not convert " << varName << " = \"" 
-					<< varValue.value << "\" to type " << typeName
+					<< preprocessedValue << "\" to type " << typeName
 				);
 			}
 			if (!varValue.referenced) {
@@ -431,6 +481,13 @@ public:
 		T res;
 		getDefault(varName, res, defaultVal, means...);
 		return res;
+	}
+	
+	template<typename T>
+	void define(const std::string &name, const T &value) {
+		std::ostringstream os;
+		os << value;
+		preprocessor_.define(name, os.str());
 	}
 	
 	void load(int argc, char *argv[]) {

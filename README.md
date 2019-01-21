@@ -32,9 +32,9 @@ The generator can be invoked using, e.g., the following line: `./gen n=10 m=3`. 
 
 * Parameter validation
 
-* Generative parameters (see (the usage below)[#usage])
+* Generative parameters (see [#usage](the usage below))
 
-* Support for adding constants and variable substitution (planned, but not implemented)
+* Preprocessor and constant substitution
 
 * Independence from Testlib (though using ParmPars together with Testlib adds features like generative parameters)
 
@@ -141,6 +141,42 @@ So, `DECLARE_GEN` is a shortcut to read `GenRange<T>` from the parameters and ge
 `DECLARE_GEN_D` does the same thing as `DECLARE_GEN`, but you can specify the default `GenRange<T>` which can be used for generating if the variable was not found.
 
 `GenRange<T>` also supports range validation, it will validate not the generated value, but the range read from the input.
+
+## Constant substitution
+
+Tired of using something like `n=1000000` in all of your tests? Then, constant substitution if for you. ParmPars has a simple preprocessor. To define a constant, you can use something like
+
+```cpp
+param.define("n", 1000000);
+```
+
+When you `DECLARE` a parameter generator, ParmPars will use all the constants declared before.
+
+The syntax of the preprocessor is quite simple. The constant should be used in the parameter as `@constName` or `@constName!`, the latter variant can be used to avoid confusion when the next character after the constant is a letter or number. If the variable name if empty, it will substitute to `@` character.
+
+Examples:
+
+Suppose we have these lines in `test.cpp`:
+
+```cpp
+...
+param.define("c", "const");
+DECLARE(string, s)
+cout << "s = " << s << endl;
+...
+```
+
+If we compile and run the executable, we will get:
+
+* `test.exe s=@c` => s = const`
+* `test.exe s=@c1` => Error, as ParmPars will try to search for constant `c1`
+* `test.exe s=@c!1` => s = const1`
+* `test.exe s=@` => `s = @`
+* `test.exe s=@!c` => `s = @c`
+* `test.exe s=@c+@c` => s = const+const`
+* `test.exe s=@c!+@c!` => s = const+const`
+
+See also `test_macros.cpp`.
 
 ## Need more examples
 
