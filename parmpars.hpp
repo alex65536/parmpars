@@ -564,13 +564,22 @@ struct ReadFromString<TestLibAddon::GenRange<T>> {
 			return true;
 		}
 		std::istringstream is(str);
-		char separator, closeBracket;
+		char separator, closeBracket, openBracket, needCloseBracket;
+		if (!is.get(openBracket)) {
+			return false;
+		}
+		if (openBracket == '[') {
+			needCloseBracket = ']';
+		} else if (openBracket == '(') {
+			needCloseBracket = ')';
+		} else {
+			return false;
+		}
 		if (
-			is.get() != '[' ||
 			!(is >> left >> separator >> right >> closeBracket) ||
 			is.get() != std::char_traits<char>::eof() ||
-			separator != ';' ||
-			closeBracket != ']'
+			(separator != ';' && separator != ',') ||
+			closeBracket != needCloseBracket
 		) {
 			return false;
 		}

@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
   ...
 ```
 
-Now run this generator as `./gen 'n=[1; 10]'`. It will read `[1; 10]` as `GenRange<int>` and use it to generate a number from `1` to `10`, and then declare `int n` with this value.
+Now run this generator as `./gen n=[1,10]`. It will read `[1,10]` as `GenRange<int>` and use it to generate a number from `1` to `10`, and then declare `int n` with this value. ParmPars accepts different syntaxes for generator ranges: round brackets are also acceptable, and `;` can be used as a separator instead of `,`.  It can be helpful, for example, when used with Polygon's stress tests.
 
 You can also use a longer way:
 

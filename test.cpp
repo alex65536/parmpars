@@ -32,7 +32,7 @@ using namespace std;
 Example usage:
 	$ ./test i=1 l=2000111222 ll=-31513975719571 f=3.931 d=-13841.313 ld=-180e433 \
 	  c=a b=true s=hello ichk=20 schk=gepardo-debian 'ra=[1;5]' 'rachk=[1;100]' \
-	  re=lin[a-z]{1,2}-(mint|u[a-z]u[a-z][a-z]u)' unused=45 'igen=[1; 200]' wuovnowvwim
+	  're=lin[a-z]{1,2}-(mint|u[a-z]u[a-z][a-z]u)' unused=45 'igen=[1; 200]' wuovnowvwim
 Output:
 	i = 1
 	l = 2000111222
