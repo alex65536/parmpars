@@ -169,7 +169,7 @@ cout << "s = " << s << endl;
 If we compile and run the executable, we will get:
 
 * `test.exe s=@c` => `s = const`
-* `test.exe s=@c1` => `Error, as ParmPars will try to search for constant `c1`
+* `test.exe s=@c1` => Error, as ParmPars will try to search for constant `c1`
 * `test.exe s=@c!1` => `s = const1`
 * `test.exe s=@` => `s = @`
 * `test.exe s=@!c` => `s = @c`
