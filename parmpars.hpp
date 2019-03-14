@@ -573,7 +573,7 @@ namespace TestLibAddon {
 		}
 		
 		T weightedGen(int w) const {
-			return rnd.wnext(left_, right, w);
+			return rnd.wnext(left_, right_, w);
 		}
 		
 		T left() const {
