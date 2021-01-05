@@ -567,12 +567,15 @@ namespace TestLibAddon {
 			checkLoaded();
 			if (left_ == right_) {
 				return left_;
-			} else {
-				return rnd.next(left_, right_);
 			}
+			return rnd.next(left_, right_);
 		}
 		
-		T weightedGen(int w) const {
+		T genWeighted(int w) const {
+			checkLoaded();
+			if (left_ == right_) {
+				return left_;
+			}
 			return rnd.wnext(left_, right_, w);
 		}
 		
