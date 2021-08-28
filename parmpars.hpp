@@ -1,7 +1,7 @@
 /*
  * MIT License
  * 
- * Copyright (c) 2018 Alexander Kernozhitsky <sh200105@mail.ru>
+ * Copyright (c) 2018-2019, 2021 Alexander Kernozhitsky <sh200105@mail.ru>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-#ifndef __PARM_PARS_HPP_INCLUDED__
-#define __PARM_PARS_HPP_INCLUDED__
+#ifndef __PARMPARS_HPP_INCLUDED__
+#define __PARMPARS_HPP_INCLUDED__
 
-#define PARM_PARS_VERSION "0.4.1~alpha"
+#define PARMPARS_VERSION "0.5~beta"
 
 // defines:
 //   PARMPARS_EXIT_ON_WARNING
@@ -205,10 +205,10 @@ struct DataValidate<std::string, typename std::enable_if<std::is_convertible<T, 
 		#ifdef PARMPARS_USE_REGEX
 		if (!std::regex_match(value, std::regex(re))) {
 		#else
-		if (pattern(re).matches(value)) {
+		if (!pattern(re).matches(value)) {
 		#endif
 			Alerts::error(StringBuilder()
-				<< varName << " = \"" << value << "\" doesn\'t match regex"
+				<< varName << " = \"" << value << "\" doesn\'t match regex "
 				<< "\"" << re << "\""
 			);
 		}
@@ -576,6 +576,10 @@ namespace TestLibAddon {
 			if (left_ == right_) {
 				return left_;
 			}
+			// Workaround for https://github.com/MikeMirzayanov/testlib/issues/76
+			if (w < 0) {
+				return right_ - 1 - rnd.wnext(right_ - left_, -w);
+			}
 			return rnd.wnext(left_, right_, w);
 		}
 		
@@ -679,7 +683,7 @@ namespace TestLibAddon {
 			}
 		}
 	public:
-		std::string pattern() const {
+		const std::string &pattern() const {
 			checkLoaded();
 			return pattern_;
 		}
@@ -748,4 +752,4 @@ using ParmParsInternal::params;
 #define DECLARE_GEN_D(type, name, def, a...) \
 	decltype(type().generate()) name = params.getDefault<type>(#name, (def), ##a).generate();
 
-#endif
+#endif  // __PARMPARS_HPP_INCLUDED__
